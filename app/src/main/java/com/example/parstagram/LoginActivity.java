@@ -54,15 +54,17 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException e) {
                 if (username.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Please enter a username", Toast.LENGTH_SHORT).show();
-                }
-                else if (password.isEmpty()){
+                    return;
+                } else if (password.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Password required", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 if (e != null) {
                     Log.e(TAG, "Issue with login", e);
                     Toast.makeText(LoginActivity.this, "Invalid username/password", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 goMainActivity();
                 Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_SHORT).show();
             }
