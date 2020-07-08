@@ -16,7 +16,8 @@
         android:ems="10"
         android:hint="@string/username"
         android:inputType="text"
-        android:importantForAutofill="no" />
+        android:autofillHints="@string/username"
+        />
 
     <EditText
         android:id="@+id/etPassword"
@@ -26,7 +27,8 @@
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:importantForAutofill="no" />
+        android:autofillHints="@string/password"
+        />
 
     <Button
         android:id="@+id/btnLogin"

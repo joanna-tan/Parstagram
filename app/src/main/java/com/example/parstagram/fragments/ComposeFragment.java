@@ -22,6 +22,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.parstagram.BitmapScaler;
+import com.example.parstagram.DeviceDimensionsHelper;
 import com.example.parstagram.Post;
 import com.example.parstagram.R;
 import com.parse.ParseException;
@@ -29,7 +31,10 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
@@ -126,14 +131,47 @@ public class ComposeFragment extends Fragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
+                Bitmap rawTakenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+
+                File resizedUri = null;
+                try {
+                    resizedUri = resizeBitmap(rawTakenImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Picture wasn't saved!", Toast.LENGTH_SHORT).show();
+
+                }
+                assert resizedUri != null;
+                Bitmap takenImage = BitmapFactory.decodeFile(resizedUri.getAbsolutePath());
+
                 // Load the taken image into a preview
                 ivPostImage.setImageBitmap(takenImage);
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private File resizeBitmap(Bitmap rawTakenImage) throws IOException {
+        // Get height or width of screen at runtime
+        int screenWidth = DeviceDimensionsHelper.getDisplayWidth(Objects.requireNonNull(getContext()));
+
+        //Resize bitmap
+        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(rawTakenImage, screenWidth);
+        //Configure byte output stream
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        //Compress the image further
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+        //Create a new file for the resized bitmap
+        File resizedFile = getPhotoFileUri(photoFileName + "_resize");
+
+        resizedFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(resizedFile);
+        // Write the bytes of the bitmap to file
+        fos.write(bytes.toByteArray());
+        fos.close();
+
+        return resizedFile;
     }
 
     // Returns the File for a photo stored on disk given the fileName
