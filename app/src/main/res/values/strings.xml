@@ -7,4 +7,8 @@
     <string name="take_picture">Take Picture</string>
     <string name="posted_image">posted_image</string>
     <string name="submit">Submit</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="compose">Compose</string>
+    <string name="profile">Profile</string>
 </resources>
