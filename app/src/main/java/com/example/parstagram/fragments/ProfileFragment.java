@@ -26,6 +26,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.example.parstagram.BitmapScaler;
 import com.example.parstagram.DeviceDimensionsHelper;
 import com.example.parstagram.GlideApp;
@@ -51,7 +52,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import static android.app.Activity.RESULT_OK;
 
 // class ProfileFragment loads all posts created by the current user
-public class ProfileFragment extends PostsFragment {
+public class ProfileFragment extends PostsFragment{
     ProfileAdapter profileAdapter;
 
     public final String TAG = "ProfileFragment";
@@ -85,8 +86,7 @@ public class ProfileFragment extends PostsFragment {
                     .load(profileImage.getUrl())
                     .transform(new RoundedCornersTransformation(50, 20))
                     .into(ivProfileImage);
-        }
-        else {
+        } else {
             ivProfileImage.setImageResource(R.drawable.ic_baseline_person_24);
         }
 
@@ -95,19 +95,11 @@ public class ProfileFragment extends PostsFragment {
             public boolean onLongClick(View view) {
                 Toast.makeText(getContext(), "Set profile picture!", Toast.LENGTH_SHORT).show();
                 onLaunchCamera(view);
-
-                if (photoFile == null) {
-                    Toast.makeText(getContext(), "There is no image!", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                    user.put(KEY_PROFILE_IMAGE, new ParseFile(photoFile));
-                    user.saveInBackground();
-
                 return true;
             }
         });
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
 
         super.rvPosts.setLayoutManager(gridLayoutManager);
 
@@ -128,22 +120,13 @@ public class ProfileFragment extends PostsFragment {
     }
 
     public void onLaunchCamera(View view) {
-        // create Intent to take a picture and return control to the calling application
-        //      makes an implicit intent for image capture
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Create a File reference for future access
         photoFile = getPhotoFileUri(photoFileName);
 
-        // wrap File object into a content provider
-        // required for API >= 24
-        // fileProvider wraps the photofile and is put into the storage
         Uri fileProvider = FileProvider.getUriForFile(Objects.requireNonNull(getContext()), "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
     }
@@ -168,10 +151,18 @@ public class ProfileFragment extends PostsFragment {
                 Bitmap takenImage = BitmapFactory.decodeFile(resizedUri.getAbsolutePath());
 
                 // Load the taken image into a preview
-                    GlideApp.with(Objects.requireNonNull(getContext()))
-                            .load(takenImage)
-                            .transform(new RoundedCornersTransformation(50, 20))
-                            .into(ivProfileImage);
+                GlideApp.with(Objects.requireNonNull(getContext()))
+                        .load(takenImage)
+                        .transform(new RoundedCornersTransformation(120, 80))
+                        .into(ivProfileImage);
+
+                if (photoFile == null) {
+                    Toast.makeText(getContext(), "There is no image!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                user.put(KEY_PROFILE_IMAGE, new ParseFile(photoFile));
+                user.saveInBackground();
+
 
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
@@ -247,13 +238,13 @@ public class ProfileFragment extends PostsFragment {
     }
 
     @Override
-    protected void loadNextPosts() {
+    protected void loadNextPosts(int page) {
         //Specify which class to query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
         query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
         query.setLimit(POSTS_QUERY_LIMIT);
-        query.whereLessThan("createdAt", allPosts.get(allPosts.size() - 1).getCreatedAt());
+        query.setSkip(page * POSTS_QUERY_LIMIT);
 
         query.addDescendingOrder(Post.KEY_CREATED_KEY);
 

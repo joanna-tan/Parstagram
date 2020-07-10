@@ -34,7 +34,7 @@ import java.util.List;
 public class PostsFragment extends Fragment {
 
     public static final String TAG = "PostsFragment";
-    public static final int POSTS_QUERY_LIMIT = 5;
+    public static final int POSTS_QUERY_LIMIT = 10;
     protected RecyclerView rvPosts;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
@@ -76,7 +76,7 @@ public class PostsFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                loadNextPosts();
+                loadNextPosts(page);
             }
         };
 
@@ -115,14 +115,14 @@ public class PostsFragment extends Fragment {
         MainActivity.miActionProgressItem.setVisible(false);
     }
 
-    protected void loadNextPosts() {
+    protected void loadNextPosts(int page) {
         showProgressBar();
         //Specify which class to query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
         query.setLimit(POSTS_QUERY_LIMIT);
         //query.whereLessThan("createdAt", allPosts.get(allPosts.size() - 1).getCreatedAt());
-        query.setSkip(allPosts.size());
+        query.setSkip(page * POSTS_QUERY_LIMIT);
 
         query.addDescendingOrder(Post.KEY_CREATED_KEY);
 
@@ -139,6 +139,7 @@ public class PostsFragment extends Fragment {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
                 allPosts.addAll(posts);
+                adapter.notifyDataSetChanged();
                 hideProgressBar();
             }
         });
