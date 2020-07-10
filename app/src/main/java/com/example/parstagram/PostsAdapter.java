@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -69,20 +70,25 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private TextView tvUsername;
         private ImageView ivImage;
         private TextView tvDescription;
-        private RelativeLayout content;
+        private ConstraintLayout content;
+        private TextView tvTimestamp;
+        private ImageView ivProfileImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivImage = itemView.findViewById(R.id.ivImage);
+            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             content = itemView.findViewById(R.id.post_item);
+            tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
         }
 
         public void bind(final Post post) {
             // Bind the post data to the view elements
             tvDescription.setText(post.getDescription());
             tvUsername.setText(post.getUser().getUsername());
+            tvTimestamp.setText(Post.getRelativeTimeAgo(post.getCreatedAt().toString()));
             ParseFile image = post.getImage();
             //ParseFile is used by parse to define/store images
             if (image != null) {
@@ -90,6 +96,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             } else {
                 ivImage.setVisibility(View.GONE);
             }
+
+            //TODO: load user profile image into ivProfileImage
 
             //set an onClickListener to the entire post body & go to post details
             content.setOnClickListener(new View.OnClickListener() {
