@@ -8,9 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.parstagram.models.Post;
 import com.parse.ParseFile;
 
 import org.parceler.Parcels;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
+import static com.example.parstagram.PostsAdapter.KEY_PROFILE_IMAGE;
 
 public class PostDetailsActivity extends AppCompatActivity {
 
@@ -18,6 +23,7 @@ public class PostDetailsActivity extends AppCompatActivity {
     ImageView ivImage;
     TextView tvDescription;
     TextView tvTimestamp;
+    ImageView ivProfileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +35,7 @@ public class PostDetailsActivity extends AppCompatActivity {
         ivImage = findViewById(R.id.ivImage);
         tvDescription = findViewById(R.id.tvDescription);
         tvTimestamp = findViewById(R.id.tvTimestamp);
+        ivProfileImage = findViewById(R.id.ivProfileImage);
 
         assert post != null;
 
@@ -42,6 +49,18 @@ public class PostDetailsActivity extends AppCompatActivity {
         }
         else {
             ivImage.setVisibility(View.GONE);
+        }
+
+        ParseFile profileImage = post.getUser().getParseFile(KEY_PROFILE_IMAGE);
+
+        if (profileImage != null) {
+            GlideApp.with(this)
+                    .load(profileImage.getUrl())
+                    .transform(new RoundedCornersTransformation(10, 5))
+                    .into(ivProfileImage);
+        }
+        else {
+            ivProfileImage.setImageResource(R.drawable.ic_baseline_person_24);
         }
     }
 }

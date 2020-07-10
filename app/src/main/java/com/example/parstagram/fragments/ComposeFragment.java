@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.example.parstagram.BitmapScaler;
 import com.example.parstagram.DeviceDimensionsHelper;
 import com.example.parstagram.MainActivity;
-import com.example.parstagram.Post;
+import com.example.parstagram.models.Post;
 import com.example.parstagram.R;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -223,5 +223,7 @@ public class ComposeFragment extends Fragment {
         // Hide progress item
         MainActivity.miActionProgressItem.setVisible(false);
     }
+
+
 
 }

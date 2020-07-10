@@ -22,7 +22,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/instagram_logo_foreground" />
+        app:srcCompat="@mipmap/instagram_logo_foreground"
+        android:contentDescription="@string/logo" />
 
     <EditText
         android:id="@+id/etUsername"

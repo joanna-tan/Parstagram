@@ -15,11 +15,14 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginEnd="8dp"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@id/ivImage"
         app:layout_constraintEnd_toStartOf="@+id/tvUsername"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@drawable/ic_baseline_person_24"
+        android:contentDescription="@string/profile_image" />
+
 
     <TextView
         android:id="@+id/tvUsername"
@@ -35,7 +38,6 @@
         tools:text="joanna" />
 
     <ImageView
-        android:id="@+id/ivMore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivImage"
@@ -51,6 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_below="@id/tvUsername"
+        android:layout_marginTop="8dp"
         android:contentDescription="@string/posted_image"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
