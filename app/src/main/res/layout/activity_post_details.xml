@@ -1,41 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/post_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
-    android:layout_margin="2dp"
-    android:orientation="vertical"
-    android:id="@+id/post_item"
-    >
+    android:layout_margin="5dp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvUsername"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="5dp"
         android:fontFamily="sans-serif-light"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:text="joanna" />
+
+    <TextView
+        android:id="@+id/tvTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvUsername"
+        android:gravity="end"
+        android:layout_marginBottom="2dp"
+        tools:text="Mon Apr 01 21:16:23 +0000 2014" />
 
     <ImageView
         android:id="@+id/ivImage"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:layout_below="@+id/tvTimestamp"
         android:contentDescription="@string/posted_image"
         android:scaleType="centerCrop"
         android:layout_marginBottom="5dp"
-        android:layout_below="@id/tvUsername"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ivImage"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/ivImage"
         android:fontFamily="sans-serif-light"
         android:textSize="18sp"
-        tools:text="Pretty cool desciption here" />
+        tools:text="Pretty cool description here" />
+
+
 </RelativeLayout>

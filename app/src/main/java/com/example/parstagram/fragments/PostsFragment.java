@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.parstagram.Post;
 import com.example.parstagram.PostsAdapter;
@@ -29,7 +28,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 
-public class PostsFragment extends Fragment {
+public class PostsFragment extends Fragment{
 
     public static final String TAG = "PostsFragment";
     public static final int POSTS_QUERY_LIMIT = 20;
@@ -41,7 +40,6 @@ public class PostsFragment extends Fragment {
     public PostsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,6 +82,7 @@ public class PostsFragment extends Fragment {
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         queryPosts();
 
+
     }
 
     protected void queryPosts() {
@@ -114,4 +113,6 @@ public class PostsFragment extends Fragment {
             }
         });
     }
+
+
 }

@@ -2,7 +2,6 @@ package com.example.parstagram;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ActionMenuView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 

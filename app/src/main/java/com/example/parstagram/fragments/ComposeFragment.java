@@ -175,7 +175,7 @@ public class ComposeFragment extends Fragment {
     }
 
     // Returns the File for a photo stored on disk given the fileName
-    // Uri = uniform resource identifer to represent the image captured
+    // Uri = uniform resource identifier to represent the image captured
     public File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
