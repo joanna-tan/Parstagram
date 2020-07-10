@@ -39,4 +39,32 @@ public class ProfileFragment extends PostsFragment{
             }
         });
     }
+
+    @Override
+    protected void loadNextPosts() {
+        //Specify which class to query
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.KEY_USER);
+        query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
+        query.setLimit(POSTS_QUERY_LIMIT);
+        query.whereLessThan("createdAt", allPosts.get(allPosts.size() - 1).getCreatedAt());
+
+        query.addDescendingOrder(Post.KEY_CREATED_KEY);
+
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> posts, ParseException e) {
+                // e == null if success
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting posts", e);
+                    return;
+                }
+
+                for (Post post : posts) {
+                    Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
+                }
+                allPosts.addAll(posts);
+            }
+        });
+    }
 }

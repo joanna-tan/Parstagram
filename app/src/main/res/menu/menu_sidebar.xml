@@ -7,7 +7,15 @@
         android:icon="@android:drawable/ic_menu_compass"
         android:title="@string/logout"
         app:showAsAction="never"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
         />
+
+    <item
+        android:id="@+id/miActionProgress"
+        android:title="@string/loading"
+        android:visible="false"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/action_view_progress" />
 
 </menu>

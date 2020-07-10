@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.parstagram.BitmapScaler;
 import com.example.parstagram.DeviceDimensionsHelper;
+import com.example.parstagram.MainActivity;
 import com.example.parstagram.Post;
 import com.example.parstagram.R;
 import com.parse.ParseException;
@@ -196,6 +197,8 @@ public class ComposeFragment extends Fragment {
         post.setDescription(description);
         post.setImage(new ParseFile(photoFile));
         post.setUser(currentUser);
+
+        showProgressBar();
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -208,6 +211,17 @@ public class ComposeFragment extends Fragment {
                 ivPostImage.setImageResource(0);
             }
         });
+        hideProgressBar();
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        MainActivity.miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        MainActivity.miActionProgressItem.setVisible(false);
     }
 
 }
