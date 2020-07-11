@@ -7,10 +7,12 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import org.json.JSONArray;
 import org.parceler.Parcel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -22,9 +24,18 @@ public class Post extends ParseObject {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_USER = "user";
     public static final String KEY_CREATED_KEY = "createdAt";
+    public static final String KEY_LIKES = "likes";
 
     // empty constructor needed by the Parceler library
     public Post() {
+    }
+
+    public ArrayList getLikes() {
+        return (ArrayList) get(KEY_LIKES);
+    }
+
+    public void setLikes(JSONArray jsonArray) {
+        put(KEY_LIKES, jsonArray);
     }
 
     public String getDescription() {

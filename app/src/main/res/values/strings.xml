@@ -15,4 +15,5 @@
     <string name="loading">Loading…</string>
     <string name="profile_image">profile_image</string>
     <string name="logo">logo</string>
+    <string name="zero_likes">0 likes</string>
 </resources>

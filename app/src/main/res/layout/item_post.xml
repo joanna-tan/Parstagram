@@ -72,7 +72,8 @@
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivImage"
-        app:srcCompat="@drawable/ic_action_like"
+        app:srcCompat="@drawable/ic_like"
+        android:tint="@color/like_selector"
         />
 
     <ImageView

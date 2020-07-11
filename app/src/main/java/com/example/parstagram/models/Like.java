@@ -4,25 +4,27 @@ import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-@ParseClassName("Comment")
-public class Comment extends ParseObject {
+import java.util.Objects;
 
-    public static final String KEY_POST = "replyingTo";
+@ParseClassName("Like")
+public class Like extends ParseObject {
+
+    public static final String KEY_POST = "postLiked";
     public static final String KEY_USER = "user";
 
-    public Comment() {
+    public Like() {
     }
 
-    public Post getPost() {
-        return (Post) getParseObject(KEY_POST);
+    public String getPost() {
+        return ((Post) Objects.requireNonNull(get(KEY_POST))).getObjectId();
     }
 
     public void setPost(Post post) {
-        put (KEY_POST, post);
+        put(KEY_POST, post);
     }
 
     public ParseUser getUser() {
-        return getParseUser(KEY_USER);
+        return (ParseUser) get(KEY_USER);
     }
 
     public void setUser(ParseUser user) {

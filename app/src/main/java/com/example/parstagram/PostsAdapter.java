@@ -2,6 +2,7 @@ package com.example.parstagram;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +14,29 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.parstagram.models.Like;
 import com.example.parstagram.models.Post;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
+    private static final String TAG = "PostsAdapter";
     private Context context;
     private List<Post> posts;
     public static final String KEY_PROFILE_IMAGE = "profileImage";
-
+    private static final String KEY_LIKES = "likes";
+    private static final String KEY_USERNAME = "username";
 
     public PostsAdapter(Context context, List<Post> posts) {
         this.context = context;
@@ -69,6 +77,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvUsername;
         private ImageView ivImage;
+        private ImageView ivLike;
         private TextView tvDescription;
         private ConstraintLayout content;
         private TextView tvTimestamp;
@@ -82,6 +91,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvDescription = itemView.findViewById(R.id.tvDescription);
             content = itemView.findViewById(R.id.post_item);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+            ivLike = itemView.findViewById(R.id.ivLike);
         }
 
         public void bind(final Post post) {
@@ -118,6 +128,54 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
                 }
             });
+
+            //find if the post has been liked by the current user
+            ParseQuery<Like> query = ParseQuery.getQuery(Like.class);
+            query.include(Like.KEY_USER);
+            query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
+
+            query.findInBackground(new FindCallback<Like>() {
+                @Override
+                public void done(List<Like> likes, ParseException e) {
+                    // e == null if success
+                    if (e != null) {
+                        Log.e(TAG, "Issue with getting posts", e);
+                        return;
+                    }
+
+                    for (Like like : likes) {
+                        Log.i(TAG, "Post: " + like.getPost());
+                        if (like.getPost().equals(post.getObjectId())) {
+                            ivLike.setSelected(true);
+                        }
+                    }
+
+                }
+            });
+
+            ivLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ivLike.setSelected(true);
+
+                    //get the like array from post
+                    Like like = new Like();
+                    like.setUser(ParseUser.getCurrentUser());
+                    like.setPost(post);
+
+                    ArrayList<Like> likes = post.getLikes();
+                    if (likes == null) {
+                        likes = new ArrayList<>();
+                        post.put(KEY_LIKES, likes);
+                    }
+                    //add one like to it
+                    post.getLikes().add(like);
+
+                    //put it back to the Parse server
+                    post.saveInBackground();
+                }
+            });
+
         }
 
 
