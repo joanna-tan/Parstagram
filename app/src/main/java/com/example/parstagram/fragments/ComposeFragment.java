@@ -5,12 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -22,11 +16,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+
 import com.example.parstagram.BitmapScaler;
 import com.example.parstagram.DeviceDimensionsHelper;
 import com.example.parstagram.MainActivity;
-import com.example.parstagram.models.Post;
 import com.example.parstagram.R;
+import com.example.parstagram.models.Post;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -87,8 +86,10 @@ public class ComposeFragment extends Fragment {
 
         //set click listener to write post data to Parse backend
         btnSubmit.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+                showProgressBar();
                 String description = etDescription.getText().toString();
                 if (description.isEmpty()) {
                     Toast.makeText(getContext(), "Description cannot be empty!", Toast.LENGTH_SHORT).show();
@@ -100,6 +101,7 @@ public class ComposeFragment extends Fragment {
                 }
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 savePost(description, currentUser, photoFile);
+                hideProgressBar();
             }
         });
     }
@@ -198,7 +200,6 @@ public class ComposeFragment extends Fragment {
         post.setImage(new ParseFile(photoFile));
         post.setUser(currentUser);
 
-        showProgressBar();
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -211,8 +212,8 @@ public class ComposeFragment extends Fragment {
                 ivPostImage.setImageResource(0);
             }
         });
-        hideProgressBar();
     }
+
 
     public void showProgressBar() {
         // Show progress item

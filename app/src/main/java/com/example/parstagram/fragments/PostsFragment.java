@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,7 +33,7 @@ import java.util.List;
 public class PostsFragment extends Fragment {
 
     public static final String TAG = "PostsFragment";
-    public static final int POSTS_QUERY_LIMIT = 10;
+    public static final int POSTS_QUERY_LIMIT = 5;
     protected RecyclerView rvPosts;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
@@ -75,6 +76,7 @@ public class PostsFragment extends Fragment {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 loadNextPosts(page);
+                hideProgressBar();
             }
         };
 
@@ -133,12 +135,16 @@ public class PostsFragment extends Fragment {
                     return;
                 }
 
+                if (posts.size() == 0) {
+                    Toast.makeText(getContext(), "You've reached the end of all posts!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 for (Post post : posts) {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
-                hideProgressBar();
             }
         });
     }
